@@ -97,7 +97,7 @@ export default {
   externals: [filterLocales],
   stats: 'minimal',
   target: 'web',
-  devtool: production ? false : 'eval-source-map',
+  devtool: production ? 'source-map' : 'eval-source-map',
   node: {
     fs: 'empty',
     module: 'empty',
@@ -150,6 +150,7 @@ export default {
     path: path.resolve(context, PUBLIC_DIR),
     crossOriginLoading: 'anonymous',
     publicPath: ASSETS_ROOT,
+    sourceMapFilename: production ? '[name].[chunkhash].js.map' : '[name].js.map',
   },
   optimization: {
     splitChunks: {
