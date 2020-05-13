@@ -34,7 +34,8 @@ const appRoot = selectApplicationRootPath()
 const history = createBrowserHistory({ basename: `${appRoot}/` })
 const store = createStore(history)
 // Initialize sentry before rendering root element.
-if (env.sentryDsn) Sentry.init({ dsn: env.sentryDsn })
+if (env.sentryDsn)
+  Sentry.init({ dsn: env.sentryDsn, release: process.env.VERSION, normalizeDepth: 10 })
 const rootElement = document.getElementById('app')
 
 const render = () => {
