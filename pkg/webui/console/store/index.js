@@ -12,20 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import * as Sentry from '@sentry/browser'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { createLogicMiddleware } from 'redux-logic'
 import { routerMiddleware } from 'connected-react-router'
+import createSentryMiddleware from 'redux-sentry-middleware'
 
 import dev from '@ttn-lw/lib/dev'
+import env from '@ttn-lw/lib/env'
 
 import createRootReducer from './reducers'
 import requestPromiseMiddleware from './middleware/request-promise-middleware'
 import logics from './middleware/logics'
 
+Sentry.init({
+  dsn: env.sentryDsn,
+  release: process.env.VERSION,
+  normalizeDepth: 10,
+})
+
 const composeEnhancers = (dev && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
 export default function(history) {
   const middleware = applyMiddleware(
+    createSentryMiddleware(Sentry, {}),
     requestPromiseMiddleware,
     routerMiddleware(history),
     createLogicMiddleware(logics),
