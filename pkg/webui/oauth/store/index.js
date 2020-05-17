@@ -24,11 +24,12 @@ import env from '@ttn-lw/lib/env'
 import createRootReducer from './reducers'
 import logic from './middleware'
 
-Sentry.init({
-  dsn: env.sentryDsn,
-  release: process.env.VERSION,
-  normalizeDepth: 10,
-})
+if (env.sentryDsn)
+  Sentry.init({
+    dsn: env.sentryDsn,
+    release: process.env.VERSION,
+    normalizeDepth: 10,
+  })
 
 const composeEnhancers = (dev && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
