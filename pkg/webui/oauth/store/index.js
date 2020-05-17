@@ -35,7 +35,32 @@ const composeEnhancers = (dev && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
 
 export default function(history) {
   const middleware = applyMiddleware(
-    createSentryMiddleware(Sentry, {}),
+    createSentryMiddleware(Sentry, {
+      actionTransformer: action => {
+        if (action.type === 'GET_OAUTH_USER_SUCCESS_ME') {
+          return {
+            ...action,
+            user: {
+              ...action.user,
+              ids: undefined,
+            },
+          }
+        }
+        return action
+      },
+      stateTransformer: state => {
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            user: {
+              ...state.user.user,
+              ids: undefined,
+            },
+          },
+        }
+      },
+    }),
     routerMiddleware(history),
     createLogicMiddleware(logic),
   )
