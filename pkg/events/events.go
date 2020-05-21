@@ -19,6 +19,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -31,7 +32,9 @@ import (
 	"go.thethings.network/lorawan-stack/v3/pkg/errors"
 	"go.thethings.network/lorawan-stack/v3/pkg/gogoproto"
 	"go.thethings.network/lorawan-stack/v3/pkg/jsonpb"
+	"go.thethings.network/lorawan-stack/v3/pkg/rpcmetadata"
 	"go.thethings.network/lorawan-stack/v3/pkg/ttnpb"
+	"google.golang.org/grpc/peer"
 )
 
 // Event interface
@@ -45,6 +48,10 @@ type Event interface {
 	Origin() string
 	Caller() string
 	Visibility() *ttnpb.Rights
+	AuthType() string
+	AuthTokenID() string
+	AuthTokenType() string
+	AuthRemoteIP() string
 }
 
 func local(evt Event) *event {
@@ -130,6 +137,30 @@ func (e event) CorrelationIDs() []string                { return e.innerEvent.Co
 func (e event) Origin() string                          { return e.innerEvent.Origin }
 func (e event) Caller() string                          { return e.caller }
 func (e event) Visibility() *ttnpb.Rights               { return e.innerEvent.Visibility }
+func (e event) AuthType() string {
+	if e.innerEvent.Authentication != nil {
+		return e.innerEvent.Authentication.Type
+	}
+	return ""
+}
+func (e event) AuthTokenType() string {
+	if e.innerEvent.Authentication != nil {
+		return e.innerEvent.Authentication.TokenType
+	}
+	return ""
+}
+func (e event) AuthTokenID() string {
+	if e.innerEvent.Authentication != nil {
+		return e.innerEvent.Authentication.TokenID
+	}
+	return ""
+}
+func (e event) AuthRemoteIP() string {
+	if e.innerEvent.Authentication != nil {
+		return e.innerEvent.Authentication.RemoteIP
+	}
+	return ""
+}
 
 var hostname string
 
@@ -163,6 +194,31 @@ func New(ctx context.Context, name string, identifiers CombinedIdentifiers, data
 	}
 	if identifiers != nil {
 		evt.innerEvent.Identifiers = identifiers.CombinedIdentifiers().GetEntityIdentifiers()
+	}
+	authentication := &ttnpb.Event_Authentication{}
+	if p, ok := peer.FromContext(ctx); ok && p.Addr.String() != "pipe" {
+		host, _, err := net.SplitHostPort(p.Addr.String())
+		if err == nil {
+			authentication.RemoteIP = host
+		}
+	}
+	md := rpcmetadata.FromIncomingContext(ctx)
+	if md.AuthType != "" {
+		authentication.Type = md.AuthType
+	}
+	if md.AuthValue != "" {
+		// Cannot use auth.SplitToken() here because of import cycle
+		parts := strings.Split(md.AuthValue, ".")
+		if len(parts) == 3 {
+			authentication.TokenType = parts[0]
+			authentication.TokenID = parts[1]
+		}
+	}
+	if md.XForwardedFor != "" {
+		authentication.RemoteIP = md.XForwardedFor
+	}
+	if !authentication.Equal(&ttnpb.Event_Authentication{}) {
+		evt.innerEvent.Authentication = authentication
 	}
 	return evt
 }
