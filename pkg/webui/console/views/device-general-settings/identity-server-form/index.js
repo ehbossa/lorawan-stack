@@ -29,7 +29,9 @@ import PropTypes from '@ttn-lw/lib/prop-types'
 import sharedMessages from '@ttn-lw/lib/shared-messages'
 import { selectAsConfig, selectJsConfig, selectNsConfig } from '@ttn-lw/lib/selectors/env'
 
-import { parseLorawanMacVersion, hasExternalJs, isDeviceOTAA } from '../utils'
+import { parseLorawanMacVersion } from '@console/lib/device-utils'
+
+import { hasExternalJs, isDeviceOTAA } from '../utils'
 
 import validationSchema from './validation-schema'
 
