@@ -250,6 +250,9 @@ func TestLinkApplication(t *testing.T) {
 	}
 
 	if !a.So(test.AssertEventPubSubPublishRequests(ctx, env.Events, 2, func(evs ...events.Event) bool {
+		for idx, e := range evs {
+			evs[idx] = events.DropAuthenticationMetadata(e)
+		}
 		return a.So(evs, should.HaveSameElementsEvent, []events.Event{
 			newLink1EndEventClosure(context.Canceled),
 			link2EndEventClosure(context.Canceled),

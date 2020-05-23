@@ -298,3 +298,12 @@ func UnmarshalJSON(data []byte) (Event, error) {
 	}
 	return e, nil
 }
+
+// DropAuthenticationMetadata returns the evetn without authentication metadata.
+func DropAuthenticationMetadata(e Event) Event {
+	if evt, ok := e.(*event); ok {
+		evt.innerEvent.Authentication = nil
+		return evt
+	}
+	return e
+}

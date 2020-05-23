@@ -66,6 +66,12 @@ func TestNew(t *testing.T) {
 	ctx = metadata.NewIncomingContext(ctx, metadata.Pairs("x-forwarded-for", "20.20.20.20"))
 	evt = events.New(ctx, "as.up.receive", nil, testData{}, ttnpb.RIGHT_ALL)
 	a.So(evt.AuthRemoteIP(), should.Equal, "20.20.20.20")
+
+	evt = events.DropAuthenticationMetadata(evt)
+	a.So(evt.AuthType(), should.Equal, "")
+	a.So(evt.AuthTokenType(), should.Equal, "")
+	a.So(evt.AuthTokenID(), should.Equal, "")
+	a.So(evt.AuthRemoteIP(), should.Equal, "")
 }
 
 func TestEvents(t *testing.T) {
