@@ -13328,8 +13328,10 @@ tslib@^1.9.3:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
 
-"ttn-lw@file:sdk/js":
-  version "3.7.1"
+ttn-lw@3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/ttn-lw/-/ttn-lw-3.8.1.tgz#742c9282c1a0d24e2b9aa0c137df82cdb231dc12"
+  integrity sha512-nYXKqGg7B72qZ3+jsc2NSi7dsreF2xZcUwJZwVUqmUHlAQpRlSoEr/uHXADCXoK7RVnNPOE2VdM1HeqqtoBOTA==
   dependencies:
     arraybuffer-to-string "^1.0.2"
     axios "^0.19.0"
