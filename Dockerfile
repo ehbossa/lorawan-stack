@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.14.4
 
 RUN addgroup -g 886 thethings && adduser -u 886 -S -G thethings thethings
 
