@@ -76,7 +76,7 @@
     "@formatjs/intl-relativetimeformat": "^2.8.2",
     "@sentry/browser": "^5.15.0",
     "autobind-decorator": "^2.1.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.3",
     "cancelable-promise": "^2.4.0",
     "classnames": "^2.2.5",
     "clipboard": "^2.0.4",
@@ -84,12 +84,12 @@
     "deep-diff": "^1.0.2",
     "error-stack-parser": "^2.0.6",
     "focus-visible": "^4.1.4",
-    "formik": "^1.5.4",
+    "formik": "^2.0.0",
     "history": "^4.9.0",
     "intl": "^1.2.5",
     "intl-pluralrules": "^1.0.3",
     "leaflet": "^1.5.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "lottie-web": "^5.5.7",
     "prop-types": "^15.6.0",
     "query-string": "^5.0.1",
@@ -115,7 +115,8 @@
     "ttn-lw": "file:sdk/js",
     "url-polyfill": "^1.1.5",
     "url-template": "^2.0.8",
-    "yup": "^0.26.6"
+    "yup": "^0.30.0",
+    "@snyk/protect": "latest"
   },
   "babel": {
     "extends": "./config/.babelrc"
@@ -146,5 +147,10 @@
   "eslintConfig": {
     "extends": "./config/eslintrc.yaml"
   },
-  "prettier": "./config/.prettierrc.js"
+  "prettier": "./config/.prettierrc.js",
+  "scripts": {
+    "prepare": "yarn run snyk-protect",
+    "snyk-protect": "snyk-protect"
+  },
+  "snyk": true
 }
