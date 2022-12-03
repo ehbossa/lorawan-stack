@@ -112,7 +112,7 @@
     "redux-actions": "^2.6.5",
     "redux-logic": "^2.1.1",
     "scroll-into-view-if-needed": "^2.2.20",
-    "ttn-lw": "file:sdk/js",
+    "ttn-lw": "3.8.1",
     "url-polyfill": "^1.1.5",
     "url-template": "^2.0.8",
     "yup": "^0.26.6"
